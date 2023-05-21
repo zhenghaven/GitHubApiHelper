@@ -8,10 +8,3 @@
 ###
 
 
-
-__version__ = '0.0.6'
-
-PKG_AUTHOR = 'Haofan Zheng'
-PKG_NAME = 'GitHubApiHelper'
-PKG_DESCRIPTION = 'A Helper program for GitHub APIs'
-PKG_LICENSE = 'MIT'

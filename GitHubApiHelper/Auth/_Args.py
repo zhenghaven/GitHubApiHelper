@@ -13,6 +13,7 @@ import os
 
 from typing import Union
 
+from ..Utils import LogEnvVars
 from . import AccessToken
 
 
@@ -29,6 +30,7 @@ def _AddArgParsers(argParser: argparse.ArgumentParser) -> None:
 
 
 def _ProcArgs(args: argparse.Namespace) -> _AuthTypes:
+	LogEnvVars.LogEnvVars()
 	if args.auth_env is not None:
 		token = os.environ.get(args.auth_env)
 		if token is not None:

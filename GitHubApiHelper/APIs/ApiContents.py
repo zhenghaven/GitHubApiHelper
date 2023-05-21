@@ -12,6 +12,7 @@ import base64
 import os
 import requests
 
+from ..Utils import LogEnvVars
 from .ApiRunner import ApiRunner
 from ._Types import (
 	_AuthType,
@@ -100,6 +101,7 @@ class CreateOrUpdate(ApiRunner):
 			help='Repo specified in the format of "owner/repo"'
 				' (default: GITHUB_REPOSITORY env var)',
 		)
+		LogEnvVars.LogEnvVars()
 
 	@classmethod
 	def FromArgs(cls, args: _ArgsType) -> ApiRunner:

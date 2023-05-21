@@ -33,9 +33,9 @@ jobs:
 
     - name: Functioning Test 1 - API-Contents-Upload
       run: |
-        python3 -m GitHubApiHelper \
+        python3 -m GitHubApiHelper -V \
           api_content_put \
-          --dest assets/git_ref_$(echo ${{ github.ref_name }} | sed 's/\//_/g')/requirements.txt \
+          --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')/requirements.txt \
           --file ${{ github.workspace }}/requirements.txt \
           --branch testing-only-branch \
           --commit-msg "Functioning Test ${{ github.ref_name }}"
