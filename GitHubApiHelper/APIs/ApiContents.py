@@ -12,7 +12,7 @@ import base64
 import os
 import requests
 
-from ..Utils import LogEnvVars
+from ..Utils import CheckResp, LogEnvVars
 from .ApiRunner import ApiRunner
 from ._Types import (
 	_AuthType,
@@ -65,7 +65,7 @@ class CreateOrUpdate(ApiRunner):
 			},
 			json=self._body,
 		)
-		req.raise_for_status()
+		CheckResp.CheckRespErr(req)
 
 		return req
 

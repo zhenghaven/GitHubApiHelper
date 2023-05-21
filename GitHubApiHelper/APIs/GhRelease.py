@@ -13,6 +13,7 @@ import requests
 
 from typing import Union
 
+from ..Utils import CheckResp
 from .ApiRunner import ApiRunner
 from ._Types import (
 	_AuthType,
@@ -54,7 +55,7 @@ class DownloadAsset(ApiRunner):
 				authHeaderKey: authHeaderVal,
 			},
 		)
-		req.raise_for_status()
+		CheckResp.CheckRespErr(req)
 
 		return req
 
