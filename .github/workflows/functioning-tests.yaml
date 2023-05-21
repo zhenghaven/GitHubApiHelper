@@ -57,8 +57,20 @@ jobs:
           --repo ethereum/solidity
         sha256sum ${{ github.workspace }}/solc-static-linux
 
+    - name: try other sol
+      uses: robinraju/release-downloader@v1.8
+      with:
+        repository: zhenghaven/resume
+        tag: v20230403
+        fileName: resume.pdf
+        out-file-path: ${{ github.workspace }}/resume.pdf
+        token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Functioning Test - GH-Release-DL (private repo)
+    - name: checksum
+      run: |
+        sha256sum ${{ github.workspace }}/resume.pdf
+
+    - name: Functioning Test - API-Release-Assets-DL (private repo)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
