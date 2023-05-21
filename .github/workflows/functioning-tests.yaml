@@ -39,7 +39,20 @@ jobs:
       run: |
         python3 -m GitHubApiHelper -V \
           api_content_put \
-          --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')/requirements.txt \
+          --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')_act_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}/requirements.txt \
           --file ${{ github.workspace }}/requirements.txt \
           --branch testing-only-branch \
           --commit-msg "Functioning Test ${{ github.ref_name }}"
+
+
+    - name: Functioning Test - GH-Release-DL (public repo)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python3 -m GitHubApiHelper -V \
+          gh_release_dl \
+          -v v0.8.20 \
+          --asset solc-static-linux
+          -o ${{ github.workspace }}\solc-static-linux
+          --repo ethereum/solidity
+        sha256sum ${{ github.workspace }}\solc-static-linux

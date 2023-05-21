@@ -8,6 +8,8 @@
 ###
 
 
+import hashlib
+import logging
 import os
 import requests
 
@@ -46,6 +48,7 @@ class DownloadAsset(ApiRunner):
 			asset=assetName,
 		)
 
+		self._logger = logging.getLogger(__name__ + '.' + self.__class__.__name__)
 		self._savePath = savePath
 
 	def MakeRequest(self, auth: _AuthType) -> _RespType:
@@ -63,7 +66,19 @@ class DownloadAsset(ApiRunner):
 		return req
 
 	def CliRun(self, auth: _AuthType) -> None:
-		self.MakeRequest(auth)
+		resp = self.MakeRequest(auth)
+
+		fileContent = resp.content
+		self._logger.debug('Received {} bytes'.format(len(fileContent)))
+
+		fileHash = hashlib.sha256(fileContent).hexdigest()
+		self._logger.debug('SHA256: {}'.format(fileHash))
+
+		with open(self._savePath, 'wb') as f:
+			f.write(fileContent)
+		self._logger.debug('Saved to {}'.format(self._savePath))
+
+		print(fileHash)
 
 	@staticmethod
 	def _AddOpArgParsers(opArgParser: _ArgParserType) -> None:
