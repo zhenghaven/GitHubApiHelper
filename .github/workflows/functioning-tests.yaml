@@ -8,6 +8,8 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions: read-all
+
 jobs:
   create_release:
     runs-on: ${{ matrix.os }}
@@ -33,18 +35,6 @@ jobs:
         python3 -m pip install ${{ github.workspace }}
 
 
-    - name: Functioning Test - API-Contents-Upload
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        python3 -m GitHubApiHelper -V \
-          api_content_put \
-          --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')_act_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}/requirements.txt \
-          --file ${{ github.workspace }}/requirements.txt \
-          --branch testing-only-branch \
-          --commit-msg "Functioning Test ${{ github.ref_name }}"
-
-
     - name: Functioning Test - GH-Release-DL (public repo)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,18 +47,6 @@ jobs:
           --repo ethereum/solidity
         sha256sum ${{ github.workspace }}/solc-static-linux
 
-    - name: try other sol
-      uses: robinraju/release-downloader@v1.8
-      with:
-        repository: zhenghaven/resume
-        tag: v20230403
-        fileName: resume.pdf
-        out-file-path: ${{ github.workspace }}/resume.pdf
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: checksum
-      run: |
-        sha256sum ${{ github.workspace }}/resume.pdf
 
     - name: Functioning Test - API-Release-Assets-DL (private repo)
       env:
@@ -94,3 +72,15 @@ jobs:
           -o ${{ github.workspace }}/resume.pdf \
           --repo zhenghaven/resume
         sha256sum ${{ github.workspace }}/resume.pdf
+
+
+        - name: Functioning Test - API-Contents-Upload
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            python3 -m GitHubApiHelper -V \
+              api_content_put \
+              --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')_act_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}/requirements.txt \
+              --file ${{ github.workspace }}/requirements.txt \
+              --branch testing-only-branch \
+              --commit-msg "Functioning Test ${{ github.ref_name }}"
