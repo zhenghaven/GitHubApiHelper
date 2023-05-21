@@ -32,6 +32,8 @@ jobs:
         python3 -m pip install ${{ github.workspace }}
 
     - name: Functioning Test 1 - API-Contents-Upload
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         python3 -m GitHubApiHelper -V \
           api_content_put \
