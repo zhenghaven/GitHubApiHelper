@@ -13,6 +13,7 @@ import requests
 
 from typing import Union
 
+from ..DefaultHosts import DefaultGhHost, HostGetter
 from ..Utils import CheckResp
 from .ApiRunner import ApiRunner
 from ._Types import (
@@ -24,7 +25,7 @@ from ._Types import (
 
 
 class DownloadAsset(ApiRunner):
-	URL_BASE = 'https://github.com/{owner}/{repo}/releases/download/{version}/{asset}'
+	URL_BASE = 'https://{gh_host}/{owner}/{repo}/releases/download/{version}/{asset}'
 
 	def __init__(
 		self,
@@ -33,10 +34,12 @@ class DownloadAsset(ApiRunner):
 		version: str,
 		assetName: str,
 		savePath: Union[os.PathLike, None],
+		hostGetter: HostGetter = DefaultGhHost(),
 	) -> None:
 		super(DownloadAsset, self).__init__()
 
 		self._url = self.URL_BASE.format(
+			gh_host=hostGetter.GetHost(),
 			owner=owner,
 			repo=repoName,
 			version=version,

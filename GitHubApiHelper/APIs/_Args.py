@@ -10,8 +10,9 @@
 
 import argparse
 
-from . import ApiRunner
 from . import ApiContents
+from . import ApiRunner
+from . import ApiUser
 from . import GhRelease
 from ._Types import _SubParserAdderType
 
@@ -20,6 +21,10 @@ OPERATION_CLASS_MAP = {
 	'api_content_put': {
 		'cls': ApiContents.CreateOrUpdate,
 		'help': 'API:Contents: Create or update file contents',
+	},
+	'api_user_get': {
+		'cls': ApiUser.Get,
+		'help': 'API:User: Get user login',
 	},
 	'gh_release_dl': {
 		'cls': GhRelease.DownloadAsset,
