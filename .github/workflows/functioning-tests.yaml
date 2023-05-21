@@ -1,0 +1,41 @@
+name: Functioning Tests
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - "v*.*.*"
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  create_release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-22.04 ]
+
+        python-version: [ 3.11 ]
+
+    name: A job to test the functionalities of the code
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Installing Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Installing this repo as a Python package
+      run: |
+        python3 -m pip install ${{ github.workspace }}
+
+    - name: Functioning Test 1 - API-Contents-Upload
+      run: |
+        python3 -m pip GitHubApiHelper \
+          api_content_put \
+          --dest assets/git_ref_$(echo ${{ github.ref_name }} | sed 's/\//_/g')/requirements.txt \
+          --file ${{ github.workspace }}/requirements.txt
+          --branch testing-only-branch
+          --commit-msg "Functioning Test ${{ github.ref_name }}"
