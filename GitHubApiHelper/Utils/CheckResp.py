@@ -22,6 +22,12 @@ def LogScope(resp: requests.Response) -> None:
 		logger.info(f'Scopes: {recvScope}')
 
 
+def LogHeaders(resp: requests.Response) -> None:
+	logger = logging.getLogger(__name__ + '.' + LogHeaders.__name__)
+	headers = [ k for k in resp.headers.keys() ]
+	logger.info(f'Response Headers: {headers}')
+
+
 def CheckRespErr(resp: requests.Response) -> None:
 	try:
 		resp.raise_for_status()
@@ -33,6 +39,7 @@ def CheckRespErr(resp: requests.Response) -> None:
 			if resp.headers['Content-Type'].startswith('text/'):
 				logger.error(resp.text)
 
+		LogHeaders(resp)
 		LogScope(resp)
 
 		raise

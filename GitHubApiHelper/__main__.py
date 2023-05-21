@@ -39,7 +39,7 @@ def main() -> None:
 	args = argParser.parse_args()
 
 	# logging configuration
-	loggingFormat = '%(asctime)s %(levelname)s %(message)s'
+	loggingFormat = '%(asctime)s %(levelname)s %(name)s: %(message)s'
 	if args.verbose:
 		logging.basicConfig(level=logging.DEBUG, format=loggingFormat)
 
