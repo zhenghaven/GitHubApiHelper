@@ -52,7 +52,7 @@ jobs:
         python3 -m GitHubApiHelper -V \
           gh_release_dl \
           -v v0.8.20 \
-          --asset solc-static-linux
-          -o ${{ github.workspace }}\solc-static-linux
+          --asset solc-static-linux \
+          -o ${{ github.workspace }}\solc-static-linux \
           --repo ethereum/solidity
         sha256sum ${{ github.workspace }}\solc-static-linux
