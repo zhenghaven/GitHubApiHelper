@@ -23,7 +23,7 @@ OPERATION_CLASS_MAP = {
 		'help': 'API:Contents: Create or update file contents',
 	},
 	'api_user_get': {
-		'cls': ApiUser.Get,
+		'cls': ApiUser.GetLogin,
 		'help': 'API:User: Get user login',
 	},
 	'gh_release_dl': {
