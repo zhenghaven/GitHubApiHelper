@@ -36,6 +36,6 @@ jobs:
         python3 -m GitHubApiHelper \
           api_content_put \
           --dest assets/git_ref_$(echo ${{ github.ref_name }} | sed 's/\//_/g')/requirements.txt \
-          --file ${{ github.workspace }}/requirements.txt
-          --branch testing-only-branch
+          --file ${{ github.workspace }}/requirements.txt \
+          --branch testing-only-branch \
           --commit-msg "Functioning Test ${{ github.ref_name }}"
