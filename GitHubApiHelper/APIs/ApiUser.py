@@ -61,7 +61,6 @@ class GetLogin(Get):
 
 	def CliRun(self, auth: _AuthType) -> None:
 		resp = self.MakeRequest(auth)
-		CheckResp.LogHeaders(resp)
 		userJson = resp.json()
 		print(userJson['login'])
 

@@ -39,7 +39,6 @@ def CheckRespErr(resp: requests.Response) -> None:
 			if resp.headers['Content-Type'].startswith('text/'):
 				logger.error(resp.text)
 
-		LogHeaders(resp)
 		LogScope(resp)
 
 		raise

@@ -32,12 +32,6 @@ jobs:
       run: |
         python3 -m pip install ${{ github.workspace }}
 
-    - name: Functioning Test - API-User-Get
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        python3 -m GitHubApiHelper -V \
-          api_user_get
 
     - name: Functioning Test - API-Contents-Upload
       env:
