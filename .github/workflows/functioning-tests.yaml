@@ -53,6 +53,19 @@ jobs:
           gh_release_dl \
           -v v0.8.20 \
           --asset solc-static-linux \
-          -o ${{ github.workspace }}\solc-static-linux \
+          -o ${{ github.workspace }}/solc-static-linux \
           --repo ethereum/solidity
-        sha256sum ${{ github.workspace }}\solc-static-linux
+        sha256sum ${{ github.workspace }}/solc-static-linux
+
+
+    - name: Functioning Test - GH-Release-DL (private repo)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python3 -m GitHubApiHelper -V \
+          gh_release_dl \
+          -v v20230403 \
+          --asset resume.pdf \
+          -o ${{ github.workspace }}/resume.pdf \
+          --repo zhenghaven/resume
+        sha256sum ${{ github.workspace }}/resume.pdf
