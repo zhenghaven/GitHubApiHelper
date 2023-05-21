@@ -11,6 +11,7 @@
 import argparse
 
 from . import ApiContents
+from . import ApiReleaseAssets
 from . import ApiRunner
 from . import ApiUser
 from . import GhRelease
@@ -21,6 +22,10 @@ OPERATION_CLASS_MAP = {
 	'api_content_put': {
 		'cls': ApiContents.CreateOrUpdate,
 		'help': 'API:Contents: Create or update file contents',
+	},
+	'api_release_asset_dl': {
+		'cls': ApiReleaseAssets.Download,
+		'help': 'GitHub:Release:Assets Download release asset',
 	},
 	'api_user_get': {
 		'cls': ApiUser.GetLogin,
