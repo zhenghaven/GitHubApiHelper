@@ -30,11 +30,11 @@ def main() -> None:
 		action='store_true',
 		help='Enable verbose output',
 	)
-	AuthArgs._AddArgParsers(argParser=argParser)
 	opArgParser = argParser.add_subparsers(
 		title='Operation to perform',
 		dest='operation',
 	)
+	AuthArgs._AddArgParsers(argParser=argParser)
 	ApiArgs._AddOpArgParsers(opArgParser=opArgParser)
 	args = argParser.parse_args()
 
