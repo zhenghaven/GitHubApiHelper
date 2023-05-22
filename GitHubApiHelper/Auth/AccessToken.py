@@ -8,7 +8,11 @@
 ###
 
 
+import os
+
 from typing import Tuple
+
+from ..Utils import LogEnvVars
 from . import AccessTokenGetter
 from . import AuthHttpHeaderGetter
 
@@ -27,3 +31,10 @@ class AccessToken(
 
 	def GetHeader(self) -> Tuple[str, str]:
 		return ('Authorization', f'Bearer {self.token}')
+
+
+def FromEnvVars() -> AccessToken:
+	LogEnvVars.LogEnvVars()
+
+	token = os.environ['GITHUB_TOKEN']
+	return AccessToken(token=token)

@@ -9,29 +9,28 @@
 
 
 import argparse
-import os
 
-from typing import Union
-
+from ._Types import _AuthTypes
 from . import AccessToken
-
-
-_AuthTypes = Union[AccessToken.AccessToken, None]
+from . import GhAppPrivateKey
 
 
 def _AddArgParsers(argParser: argparse.ArgumentParser) -> None:
-	authGrp = argParser.add_mutually_exclusive_group(required=False)
+	authGrp = argParser.add_mutually_exclusive_group(required=True)
 	authGrp.add_argument(
-		'--auth-env',
-		type=str, required=False, default='GITHUB_TOKEN',
-		help='The name of the environment variable used to retrieve the access token',
+		'--auth-token', action='store_true',
+		help='Use access token as authentication method'
+	)
+	authGrp.add_argument(
+		'--auth-gh-app', action='store_true',
+		help='Use GitHub App\'s private key as authentication method'
 	)
 
 
 def _ProcArgs(args: argparse.Namespace) -> _AuthTypes:
-	if args.auth_env is not None:
-		token = os.environ.get(args.auth_env)
-		if token is not None:
-			return AccessToken.AccessToken(token=token)
+	if args.auth_token:
+		return AccessToken.FromEnvVars()
+	elif args.auth_gh_app:
+		return GhAppPrivateKey.FromEnvVars()
 
 	raise ValueError('No valid authentication method is specified')

@@ -10,20 +10,40 @@
 
 import argparse
 
-from . import ApiRunner
+from . import ApiActionsSecrets
 from . import ApiContents
+from . import ApiReleaseAssets
+from . import ApiRunner
+from . import ApiUser
 from . import GhRelease
+from . import MiscShowToken
 from ._Types import _SubParserAdderType
 
 
 OPERATION_CLASS_MAP = {
+	'api_actions_secrets_from_gh_app': {
+		'cls': ApiActionsSecrets.SetRepoSecretFromGhApp,
+		'help': 'API:Actions:Secrets: Set repository secret from GitHub App token',
+	},
 	'api_content_put': {
 		'cls': ApiContents.CreateOrUpdate,
 		'help': 'API:Contents: Create or update file contents',
 	},
+	'api_release_asset_dl': {
+		'cls': ApiReleaseAssets.Download,
+		'help': 'GitHub:Release:Assets Download release asset',
+	},
+	'api_user_get': {
+		'cls': ApiUser.GetLogin,
+		'help': 'API:User: Get user login',
+	},
 	'gh_release_dl': {
 		'cls': GhRelease.DownloadAsset,
 		'help': 'GitHub:Release: Download release asset',
+	},
+	'misc_show_token': {
+		'cls': MiscShowToken.ShowToken,
+		'help': 'Misc:ShowToken: Print authentication token to stdout',
 	},
 }
 

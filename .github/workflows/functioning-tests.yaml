@@ -10,8 +10,11 @@ on:
 
 jobs:
   create_release:
+    permissions:
+      contents: write
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-22.04 ]
 
@@ -31,11 +34,14 @@ jobs:
       run: |
         python3 -m pip install ${{ github.workspace }}
 
-    - name: Functioning Test 1 - API-Contents-Upload
+
+    - name: Functioning Test - API-Contents-Upload
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        python3 -m GitHubApiHelper \
+        python3 -m GitHubApiHelper --auth-token \
           api_content_put \
-          --dest assets/git_ref_$(echo ${{ github.ref_name }} | sed 's/\//_/g')/requirements.txt \
+          --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')_act_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}/requirements.txt \
           --file ${{ github.workspace }}/requirements.txt \
           --branch testing-only-branch \
           --commit-msg "Functioning Test ${{ github.ref_name }}"

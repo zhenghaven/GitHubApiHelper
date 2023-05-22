@@ -9,6 +9,7 @@
 
 
 import argparse
+import logging
 
 from .Auth import _Args as AuthArgs
 from .APIs import _Args as ApiArgs
@@ -19,13 +20,29 @@ def main() -> None:
 	argParser = argparse.ArgumentParser(
 		description=_Meta.PKG_DESCRIPTION,
 	)
-	AuthArgs._AddArgParsers(argParser=argParser)
+	argParser.add_argument(
+		'--version', '-v',
+		action='version',
+		version=_Meta.__version__,
+	)
+	argParser.add_argument(
+		'--verbose', '-V',
+		action='store_true',
+		help='Enable verbose output',
+	)
 	opArgParser = argParser.add_subparsers(
 		title='Operation to perform',
 		dest='operation',
 	)
+	AuthArgs._AddArgParsers(argParser=argParser)
 	ApiArgs._AddOpArgParsers(opArgParser=opArgParser)
 	args = argParser.parse_args()
+
+	# logging configuration
+	loggingFormat = '%(asctime)s %(levelname)s %(name)s: %(message)s'
+	if args.verbose:
+		logging.basicConfig(level=logging.DEBUG, format=loggingFormat)
+
 	authMethod = AuthArgs._ProcArgs(args=args)
 
 	apiRunner = ApiArgs._ProcArgs(args=args)

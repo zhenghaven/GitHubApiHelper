@@ -12,6 +12,8 @@ import base64
 import os
 import requests
 
+from ..DefaultHosts import DefaultApiHost, HostGetter
+from ..Utils import CheckResp, LogEnvVars
 from .ApiRunner import ApiRunner
 from ._Types import (
 	_AuthType,
@@ -24,7 +26,7 @@ from ._Types import (
 class CreateOrUpdate(ApiRunner):
 	#https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#create-or-update-file-contents
 
-	URL_BASE = 'https://api.github.com/repos/{owner}/{repo}/contents/{path}'
+	URL_BASE = 'https://{api_host}/repos/{owner}/{repo}/contents/{path}'
 
 	def __init__(
 		self,
@@ -35,10 +37,12 @@ class CreateOrUpdate(ApiRunner):
 		contentBase64: str,
 		branch: str = None,
 		sha: str = None,
+		hostGetter: HostGetter = DefaultApiHost(),
 	) -> None:
 		super(CreateOrUpdate, self).__init__()
 
 		self._url = self.URL_BASE.format(
+			api_host=hostGetter.GetHost(),
 			owner=owner,
 			repo=repoName,
 			path=destPath,
@@ -64,7 +68,7 @@ class CreateOrUpdate(ApiRunner):
 			},
 			json=self._body,
 		)
-		req.raise_for_status()
+		CheckResp.CheckRespErr(req)
 
 		return req
 
@@ -100,6 +104,7 @@ class CreateOrUpdate(ApiRunner):
 			help='Repo specified in the format of "owner/repo"'
 				' (default: GITHUB_REPOSITORY env var)',
 		)
+		LogEnvVars.LogEnvVars()
 
 	@classmethod
 	def FromArgs(cls, args: _ArgsType) -> ApiRunner:

@@ -8,10 +8,13 @@
 ###
 
 
+import logging
+import os
 
-__version__ = '0.1.0'
 
-PKG_AUTHOR = 'Haofan Zheng'
-PKG_NAME = 'GitHubApiHelper'
-PKG_DESCRIPTION = 'A Helper program for GitHub APIs'
-PKG_LICENSE = 'MIT'
+def LogEnvVars() ->None:
+	logger = logging.getLogger(__name__ + '.' + LogEnvVars.__name__)
+	envVars = [ k for k in os.environ.keys() ]
+	logger.debug(
+		f'Current environment variables: {envVars}'
+	)

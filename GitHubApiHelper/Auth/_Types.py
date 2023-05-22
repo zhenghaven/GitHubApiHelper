@@ -8,10 +8,15 @@
 ###
 
 
+from . import AccessTokenGetter
+from . import AuthHttpHeaderGetter
 
-__version__ = '0.1.0'
 
-PKG_AUTHOR = 'Haofan Zheng'
-PKG_NAME = 'GitHubApiHelper'
-PKG_DESCRIPTION = 'A Helper program for GitHub APIs'
-PKG_LICENSE = 'MIT'
+class GeneralAuthType(
+	AccessTokenGetter.AccessTokenGetter,
+	AuthHttpHeaderGetter.AuthHttpHeaderGetter,
+):
+	pass
+
+
+_AuthTypes = GeneralAuthType
