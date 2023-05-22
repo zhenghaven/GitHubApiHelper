@@ -31,5 +31,6 @@ setup(
 		'requests>=2.30.0',
 		'PyJWT>=2.7.0',
 		'cryptography>=40.0.2',
+		'PyNaCl>=1.5.0',
 	],
 )
