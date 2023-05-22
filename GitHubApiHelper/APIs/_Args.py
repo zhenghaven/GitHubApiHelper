@@ -10,6 +10,7 @@
 
 import argparse
 
+from . import ApiActionsSecrets
 from . import ApiContents
 from . import ApiReleaseAssets
 from . import ApiRunner
@@ -19,6 +20,10 @@ from ._Types import _SubParserAdderType
 
 
 OPERATION_CLASS_MAP = {
+	'api_actions_secrets_from_gh_app': {
+		'cls': ApiActionsSecrets.SetRepoSecretFromGhApp,
+		'help': 'API:Actions:Secrets: Set repository secret from GitHub App token',
+	},
 	'api_content_put': {
 		'cls': ApiContents.CreateOrUpdate,
 		'help': 'API:Contents: Create or update file contents',

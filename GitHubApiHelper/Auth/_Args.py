@@ -9,16 +9,10 @@
 
 
 import argparse
-import os
 
-from typing import Union
-
-from ..Utils import LogEnvVars
+from ._Types import _AuthTypes
 from . import AccessToken
-from . import AppPrivateKey
-
-
-_AuthTypes = Union[AccessToken.AccessToken, None]
+from . import GhAppPrivateKey
 
 
 def _AddArgParsers(argParser: argparse.ArgumentParser) -> None:
@@ -34,33 +28,9 @@ def _AddArgParsers(argParser: argparse.ArgumentParser) -> None:
 
 
 def _ProcArgs(args: argparse.Namespace) -> _AuthTypes:
-	LogEnvVars.LogEnvVars()
 	if args.auth_token:
-		token = os.environ['GITHUB_TOKEN']
-		return AccessToken.AccessToken(token=token)
+		return AccessToken.FromEnvVars()
 	elif args.auth_gh_app:
-		privKey = os.environ['GITHUB_APP_PRIVATE_KEY']
-		appId = os.environ['GITHUB_APP_ID']
-
-		installId = os.environ.get('GITHUB_APP_INSTALLATION_ID', None)
-		repo = os.environ.get('GITHUB_APP_REPO', None)
-		if installId is None and repo is None:
-			raise ValueError(
-				'Either GITHUB_APP_INSTALLATION_ID or GITHUB_APP_REPO must be set'
-			)
-		elif installId is not None:
-			return AppPrivateKey.AppPrivateKeyByInstallId(
-				privKey=privKey,
-				appId=appId,
-				installId=installId,
-			)
-		elif repo is not None:
-			owner, repoName = repo.split('/', maxsplit=1)
-			return AppPrivateKey.AppPrivateKeyByRepo(
-				privKey=privKey,
-				appId=appId,
-				owner=owner,
-				repoName=repoName,
-			)
+		return GhAppPrivateKey.FromEnvVars()
 
 	raise ValueError('No valid authentication method is specified')
