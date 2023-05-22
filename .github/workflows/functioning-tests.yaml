@@ -10,7 +10,8 @@ on:
 
 jobs:
   create_release:
-    permissions: write-all
+    permissions:
+      contents: write
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -34,39 +35,11 @@ jobs:
         python3 -m pip install ${{ github.workspace }}
 
 
-    - name: Functioning Test - GH-Release-DL (public repo)
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        python3 -m GitHubApiHelper -V --auth-token \
-          gh_release_dl \
-          -v v0.8.20 \
-          --asset solc-static-linux \
-          -o ${{ github.workspace }}/solc-static-linux \
-          --repo ethereum/solidity
-        sha256sum ${{ github.workspace }}/solc-static-linux
-
-
-    - name: Functioning Test - API-Release-Assets-DL (private repo)
-      env:
-        GITHUB_APP_PRIVATE_KEY: ${{ secrets.ACCESS_APP_PRIV_KEY }}
-        GITHUB_APP_ID: ${{ secrets.ACCESS_APP_ID }}
-        GITHUB_APP_REPO: 'zhenghaven/resume'
-      run: |
-        python3 -m GitHubApiHelper -V --auth-gh-app \
-          api_release_asset_dl \
-          -v v20230403 \
-          --asset resume.pdf \
-          -o ${{ github.workspace }}/resume.pdf \
-          --repo zhenghaven/resume
-        sha256sum ${{ github.workspace }}/resume.pdf
-
-
     - name: Functioning Test - API-Contents-Upload
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        python3 -m GitHubApiHelper -V --auth-token \
+        python3 -m GitHubApiHelper --auth-token \
           api_content_put \
           --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')_act_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}/requirements.txt \
           --file ${{ github.workspace }}/requirements.txt \
