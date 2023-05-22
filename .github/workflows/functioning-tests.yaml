@@ -10,9 +10,7 @@ on:
 
 jobs:
   create_release:
-    permissions:
-      actions: write
-      contents: write
+    permissions: write-all
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
