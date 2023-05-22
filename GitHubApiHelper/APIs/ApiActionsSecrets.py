@@ -75,7 +75,7 @@ class SetRepoSecret(ApiRunner):
 		secretValue: str,
 		hostGetter: HostGetter = DefaultApiHost(),
 	) -> None:
-		super(GetRepoPubKey, self).__init__()
+		super(SetRepoSecret, self).__init__()
 
 		self._url = self.URL_BASE.format(
 			api_host=hostGetter.GetHost(),
