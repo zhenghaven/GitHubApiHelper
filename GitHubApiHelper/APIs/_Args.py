@@ -16,6 +16,7 @@ from . import ApiReleaseAssets
 from . import ApiRunner
 from . import ApiUser
 from . import GhRelease
+from . import MiscShowToken
 from ._Types import _SubParserAdderType
 
 
@@ -39,6 +40,10 @@ OPERATION_CLASS_MAP = {
 	'gh_release_dl': {
 		'cls': GhRelease.DownloadAsset,
 		'help': 'GitHub:Release: Download release asset',
+	},
+	'misc_show_token': {
+		'cls': MiscShowToken.ShowToken,
+		'help': 'Misc:ShowToken: Print authentication token to stdout',
 	},
 }
 

@@ -62,18 +62,6 @@ jobs:
         sha256sum ${{ github.workspace }}/resume.pdf
 
 
-    - name: Functioning Test - API-Actions-Secrets-Set
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_APP_PRIVATE_KEY: ${{ secrets.ACCESS_APP_PRIV_KEY }}
-        GITHUB_APP_ID: ${{ secrets.ACCESS_APP_ID }}
-        GITHUB_APP_REPO: 'zhenghaven/resume'
-      run: |
-        python3 -m GitHubApiHelper -V --auth-token \
-          api_actions_secrets_from_gh_app \
-          --secret 'TEST_SET_SECRET'
-
-
     - name: Functioning Test - API-Contents-Upload
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
