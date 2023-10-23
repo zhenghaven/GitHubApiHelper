@@ -8,12 +8,14 @@
 ###
 
 
-class AccessTokenGetter(object):
-	def __init__(self) -> None:
-		super(AccessTokenGetter, self).__init__()
+from . import AccessTokenGetter
 
-	def GetToken() -> str:
-		raise NotImplementedError('GetToken() is not implemented')
+
+class Public(
+	AccessTokenGetter.AccessTokenGetter,
+):
+	def __init__(self) -> None:
+		super(Public, self).__init__()
 
 	def IsPublic(self) -> bool:
-		return False
+		return True
