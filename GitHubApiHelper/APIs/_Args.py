@@ -38,6 +38,10 @@ OPERATION_CLASS_MAP = {
 		'cls': ApiTags.GetTagList,
 		'help': 'API:Tags: Get list of tags',
 	},
+	'api_tags_latest_ver': {
+		'cls': ApiTags.GetLatestVer,
+		'help': 'API:Tags: Get latest version tag',
+	},
 	'api_user_get': {
 		'cls': ApiUser.GetLogin,
 		'help': 'API:User: Get user login',

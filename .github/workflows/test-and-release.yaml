@@ -66,25 +66,23 @@ jobs:
       run: |
         python3 -m pip install ${{ github.workspace }}
 
-    - name: Potential new tag
-      id: new_tag
+    - name: Get latest version
+      id: latest_ver
       run: |
-        echo "tag=v$(python3 -m GitHubApiHelper --version)" >> $GITHUB_OUTPUT
-
-    - name: Get latest tag
-      id: latest_tag
-      working-directory: ${{ github.workspace }}
-      run: |
-        echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+        python3 -m GitHubApiHelper --auth-token \
+          api_tags_latest_ver \
+            --repo ${{ github.repository }} \
+            -l $(python3 -m GitHubApiHelper --version) \
+            --github-out
 
     - name: Create tag
-      if: ${{ startsWith(github.ref, 'refs/head/main') && steps.new_tag.outputs.tag != steps.latest_tag.outputs.tag }}
+      if: ${{ startsWith(github.ref, 'refs/head/main') && steps.latest_ver.outputs.remote != steps.latest_ver.outputs.all }}
       uses: actions/github-script@v6
       with:
         script: |
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: 'refs/tags/${{ steps.new_tag.outputs.tag }}',
+            ref: 'refs/tags/${{ steps.latest_ver.outputs.allV }}',
             sha: context.sha
           })

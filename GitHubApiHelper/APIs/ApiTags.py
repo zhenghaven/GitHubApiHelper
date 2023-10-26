@@ -10,7 +10,11 @@
 
 import json
 import os
+import sys
 import requests
+
+from packaging import version
+from typing import List
 
 from ..DefaultHosts import DefaultApiHost, HostGetter
 from ..Utils import CheckResp
@@ -82,4 +86,89 @@ class GetTagList(ApiRunner):
 		return cls(
 			owner=owner,
 			repoName=repoName,
+		)
+
+
+class GetLatestVer(GetTagList):
+
+	def __init__(
+		self,
+		owner: str,
+		repoName: str,
+		localVers: List[str],
+		isGitHubOut: bool = False,
+		hostGetter: HostGetter = DefaultApiHost(),
+	) -> None:
+		super(GetLatestVer, self).__init__(
+			owner=owner,
+			repoName=repoName,
+			hostGetter=hostGetter,
+		)
+		self.localVers = localVers
+		self.isGitHubOut = isGitHubOut
+
+	def CliRun(self, auth: _AuthType) -> None:
+		if self.isGitHubOut and os.environ.get('GITHUB_OUTPUT', None) is None:
+			raise RuntimeError('GitHub output is enabled but GITHUB_OUTPUT is not set')
+
+		resJson = self.MakeRequest(auth).json()
+		remoteVers = [tag['name'] for tag in resJson]
+
+		# version object from packaging.version
+		remoteVers = [version.parse(ver) for ver in remoteVers]
+		localVers = [version.parse(ver) for ver in self.localVers]
+
+		# version string from packaging.version
+		remoteMaxVer = max(remoteVers)
+		allMaxVer = max(remoteMaxVer, *localVers)
+		lines = [
+			f'remote={remoteMaxVer}\n',
+			f'all={allMaxVer}\n',
+		]
+
+		# version string starting with 'v'
+		remoteMaxVerStr = f'{remoteMaxVer}'
+		remoteMaxVerStr = f'v{remoteMaxVerStr}' if not remoteMaxVerStr.startswith('v') else remoteMaxVerStr
+		allMaxVerStr = f'{allMaxVer}'
+		allMaxVerStr = f'v{allMaxVerStr}' if not allMaxVerStr.startswith('v') else allMaxVerStr
+		lines.extend([
+			f'remoteV={remoteMaxVerStr}\n',
+			f'allV={allMaxVerStr}\n',
+		])
+
+		sys.stdout.writelines(lines)
+
+		if self.isGitHubOut:
+			with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+				f.writelines(lines)
+
+	@staticmethod
+	def _AddOpArgParsers(opArgParser: _ArgParserType) -> None:
+		opArgParser.add_argument(
+			'--repo', type=str, required=False,
+			default=os.environ.get('GITHUB_REPOSITORY', None),
+			help='Repo specified in the format of "owner/repo"'
+				' (default: GITHUB_REPOSITORY env var)',
+		)
+		opArgParser.add_argument(
+			'--local-ver', '-l', type=str, nargs='*', default=[],
+			help='Local version string to compare with',
+		)
+		opArgParser.add_argument(
+			'--github-out', action='store_true',
+			help='Output to GitHub Actions',
+		)
+
+	@classmethod
+	def FromArgs(cls, args: _ArgsType) -> ApiRunner:
+		if args.repo is None:
+			raise ValueError('Repo not specified')
+
+		owner, repoName = args.repo.split('/', maxsplit=1)
+
+		return cls(
+			owner=owner,
+			repoName=repoName,
+			localVers=args.local_ver,
+			isGitHubOut=args.github_out,
 		)
