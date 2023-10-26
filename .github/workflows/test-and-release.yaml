@@ -78,7 +78,7 @@ jobs:
             --github-out
 
     - name: Create tag
-      if: ${{ startsWith(github.ref, 'refs/head/main') && steps.latest_ver.outputs.remote != steps.latest_ver.outputs.all }}
+      if: ${{ startsWith(github.ref, 'refs/heads/main') && steps.latest_ver.outputs.remote != steps.latest_ver.outputs.all }}
       uses: actions/github-script@v6
       with:
         script: |
