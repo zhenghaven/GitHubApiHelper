@@ -68,6 +68,8 @@ jobs:
 
     - name: Get latest version
       id: latest_ver
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         python3 -m GitHubApiHelper --auth-token \
           api_tags_latest_ver \
