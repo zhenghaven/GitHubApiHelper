@@ -8,10 +8,14 @@
 ###
 
 
+from . import AccessTokenGetter
 
-__version__ = '0.1.1'
 
-PKG_AUTHOR = 'Haofan Zheng'
-PKG_NAME = 'GitHubApiHelper'
-PKG_DESCRIPTION = 'A Helper program for GitHub APIs'
-PKG_LICENSE = 'MIT'
+class Public(
+	AccessTokenGetter.AccessTokenGetter,
+):
+	def __init__(self) -> None:
+		super(Public, self).__init__()
+
+	def IsPublic(self) -> bool:
+		return True

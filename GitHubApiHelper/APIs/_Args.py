@@ -14,6 +14,7 @@ from . import ApiActionsSecrets
 from . import ApiContents
 from . import ApiReleaseAssets
 from . import ApiRunner
+from . import ApiTags
 from . import ApiUser
 from . import GhRelease
 from . import MiscShowToken
@@ -32,6 +33,14 @@ OPERATION_CLASS_MAP = {
 	'api_release_asset_dl': {
 		'cls': ApiReleaseAssets.Download,
 		'help': 'GitHub:Release:Assets Download release asset',
+	},
+	'api_tags': {
+		'cls': ApiTags.GetTagList,
+		'help': 'API:Tags: Get list of tags',
+	},
+	'api_tags_latest_ver': {
+		'cls': ApiTags.GetLatestVer,
+		'help': 'API:Tags: Get latest version tag',
 	},
 	'api_user_get': {
 		'cls': ApiUser.GetLogin,

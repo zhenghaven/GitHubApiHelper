@@ -13,6 +13,7 @@ import argparse
 from ._Types import _AuthTypes
 from . import AccessToken
 from . import GhAppPrivateKey
+from . import Public
 
 
 def _AddArgParsers(argParser: argparse.ArgumentParser) -> None:
@@ -25,6 +26,10 @@ def _AddArgParsers(argParser: argparse.ArgumentParser) -> None:
 		'--auth-gh-app', action='store_true',
 		help='Use GitHub App\'s private key as authentication method'
 	)
+	authGrp.add_argument(
+		'--public', action='store_true',
+		help='No authentication is required'
+	)
 
 
 def _ProcArgs(args: argparse.Namespace) -> _AuthTypes:
@@ -32,5 +37,7 @@ def _ProcArgs(args: argparse.Namespace) -> _AuthTypes:
 		return AccessToken.FromEnvVars()
 	elif args.auth_gh_app:
 		return GhAppPrivateKey.FromEnvVars()
+	elif args.public:
+		return Public.Public()
 
 	raise ValueError('No valid authentication method is specified')

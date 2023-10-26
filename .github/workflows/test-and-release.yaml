@@ -1,0 +1,90 @@
+name: test_and_release
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  func_tests:
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ 3.11 ]
+
+    name: A job to test the functionalities of the code
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Installing Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Installing this repo as a Python package
+      run: |
+        python3 -m pip install ${{ github.workspace }}
+
+    - name: Functioning Test - API-Contents-Upload
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python3 -m GitHubApiHelper --auth-token \
+          api_content_put \
+          --dest assets/git_ref_$(echo "${{ github.ref_name }}" | sed 's/\//_/g')_act_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}/requirements.txt \
+          --file ${{ github.workspace }}/requirements.txt \
+          --branch testing-only-branch \
+          --commit-msg "Functioning Test ${{ github.ref_name }}"
+
+
+  create_tag:
+    needs: [ func_tests ]
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ 3.11 ]
+
+    name: A job to test the functionalities of the code
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Installing Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Installing this repo as a Python package
+      run: |
+        python3 -m pip install ${{ github.workspace }}
+
+    - name: Get latest version
+      id: latest_ver
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python3 -m GitHubApiHelper --auth-token \
+          api_tags_latest_ver \
+            --repo ${{ github.repository }} \
+            -l $(python3 -m GitHubApiHelper --version) \
+            --github-out
+
+    - name: Create tag
+      if: ${{ startsWith(github.ref, 'refs/head/main') && steps.latest_ver.outputs.remote != steps.latest_ver.outputs.all }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: 'refs/tags/${{ steps.latest_ver.outputs.allV }}',
+            sha: context.sha
+          })

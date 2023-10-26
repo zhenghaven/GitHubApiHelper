@@ -1,0 +1,27 @@
+name: on_new_tag
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  check_ver:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        python-version: [ 3.11 ]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Installing Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Check tag matches version
+      run: |
+        [[ $(python3 -m GitHubApiHelper --version) == ${GITHUB_REF#refs/tags/v} ]]
+

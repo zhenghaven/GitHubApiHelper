@@ -14,3 +14,6 @@ class AccessTokenGetter(object):
 
 	def GetToken() -> str:
 		raise NotImplementedError('GetToken() is not implemented')
+
+	def IsPublic(self) -> bool:
+		return False
