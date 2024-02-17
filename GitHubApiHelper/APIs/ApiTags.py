@@ -120,7 +120,7 @@ class GetLatestVer(GetTagList):
 
 		# version string from packaging.version
 		remoteMaxVer = max(remoteVers)
-		allMaxVer = max(remoteMaxVer, *localVers)
+		allMaxVer = max([remoteMaxVer] + localVers)
 		lines = [
 			f'remote={remoteMaxVer}\n',
 			f'all={allMaxVer}\n',
