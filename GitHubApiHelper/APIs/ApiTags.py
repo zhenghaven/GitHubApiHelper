@@ -119,8 +119,18 @@ class GetLatestVer(GetTagList):
 		localVers = [version.parse(ver) for ver in self.localVers]
 
 		# version string from packaging.version
-		remoteMaxVer = max(remoteVers)
-		allMaxVer = max([remoteMaxVer] + localVers)
+		if len(remoteVers) == 0:
+			# there is no remote versions -> only compare local versions
+			remoteMaxVer = version.parse('0.0.0')
+			allMaxVer = max(localVers)
+		elif len(localVers) == 0:
+			# there is no local versions -> only compare remote versions
+			remoteMaxVer = max(remoteVers)
+			allMaxVer = remoteMaxVer
+		else:
+			# compare both remote and local versions
+			remoteMaxVer = max(remoteVers)
+			allMaxVer = max([remoteMaxVer] + localVers)
 		lines = [
 			f'remote={remoteMaxVer}\n',
 			f'all={allMaxVer}\n',
